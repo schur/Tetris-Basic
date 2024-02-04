@@ -64,19 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //draw the Tetromino
   function draw() {
-    current.forEach(index => {
-      squares[currentPosition + index].classList.add('tetromino')
-      squares[currentPosition + index].style.backgroundColor = colors[random]
-    })
+      current.forEach(index => {
+        squares[currentPosition + index].classList.add('tetromino')
+        squares[currentPosition + index].style.backgroundColor = colors[random]
+      })
   }
 
   //undraw the Tetromino
   function undraw() {
-    current.forEach(index => {
-      squares[currentPosition + index].classList.remove('tetromino')
-      squares[currentPosition + index].style.backgroundColor = ''
-
-    })
+      current.forEach(index => {
+        squares[currentPosition + index].classList.remove('tetromino')
+        squares[currentPosition + index].style.backgroundColor = ''
+      })
   }
 
   //assign functions to keyCodes
@@ -95,48 +94,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //move down function
   function moveDown() {
-    undraw()
-    currentPosition += width
-    draw()
+    requestAnimationFrame(function() { 
+      undraw()
+      currentPosition += width
+      draw()
+    })
     freeze()
   }
 
   //freeze function
   function freeze() {
     if(current.some(index => squares[currentPosition + index + width].classList.contains('taken'))) {
-      current.forEach(index => squares[currentPosition + index].classList.add('taken'))
-      //start a new tetromino falling
-      random = nextRandom
-      nextRandom = Math.floor(Math.random() * theTetrominoes.length)
-      current = theTetrominoes[random][currentRotation]
-      currentPosition = 4
-      draw()
-      displayShape()
-      addScore()
-      gameOver()
+//      requestAnimationFrame(function() { 
+        current.forEach(index => squares[currentPosition + index].classList.add('taken'))
+//      })
+        addScore()
+        //start a new tetromino falling
+        random = nextRandom
+        nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+        current = theTetrominoes[random][currentRotation]
+        currentPosition = 4
+        draw()
+        displayShape()
+        gameOver()
     }
   }
 
   //move the tetromino left, unless is at the edge or there is a blockage
   function moveLeft() {
-    undraw()
-    const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
-    if(!isAtLeftEdge) currentPosition -=1
-    if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-      currentPosition +=1
-    }
-    draw()
+    requestAnimationFrame(function() { 
+      undraw()
+      const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
+      if(!isAtLeftEdge) currentPosition -=1
+      if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        currentPosition +=1
+      }
+      draw()
+    })
   }
 
   //move the tetromino right, unless is at the edge or there is a blockage
   function moveRight() {
-    undraw()
-    const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1)
-    if(!isAtRightEdge) currentPosition +=1
-    if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
-      currentPosition -=1
-    }
-    draw()
+    requestAnimationFrame(function() { 
+      undraw()
+      const isAtRightEdge = current.some(index => (currentPosition + index) % width === width -1)
+      if(!isAtRightEdge) currentPosition +=1
+      if(current.some(index => squares[currentPosition + index].classList.contains('taken'))) {
+        currentPosition -=1
+      }
+      draw()
+    })
   }
 
   
@@ -167,14 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
   
   //rotate the tetromino
   function rotate() {
-    undraw()
-    currentRotation ++
-    if(currentRotation === current.length) { //if the current rotation gets to 4, make it go back to 0
-      currentRotation = 0
-    }
-    current = theTetrominoes[random][currentRotation]
-    checkRotatedPosition()
-    draw()
+    requestAnimationFrame(function() { 
+      undraw()
+      currentRotation ++
+      if(currentRotation === current.length) { //if the current rotation gets to 4, make it go back to 0
+        currentRotation = 0
+      }
+      current = theTetrominoes[random][currentRotation]
+      checkRotatedPosition()
+      draw()
+    })
   }
   /////////
 
@@ -197,15 +206,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   //display the shape in the mini-grid display
   function displayShape() {
-    //remove any trace of a tetromino form the entire grid
-    displaySquares.forEach(square => {
-      square.classList.remove('tetromino')
-      square.style.backgroundColor = ''
-    })
-    upNextTetrominoes[nextRandom].forEach( index => {
-      displaySquares[displayIndex + index].classList.add('tetromino')
-      displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
-    })
+      //remove any trace of a tetromino form the entire grid
+      displaySquares.forEach(square => {
+        square.classList.remove('tetromino')
+        square.style.backgroundColor = ''
+      })
+      upNextTetrominoes[nextRandom].forEach( index => {
+        displaySquares[displayIndex + index].classList.add('tetromino')
+        displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
+      })
   }
 
   //add functionality to the button
